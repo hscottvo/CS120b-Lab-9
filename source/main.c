@@ -114,7 +114,7 @@ void speaker_tick() {
 void set_tick() {
     switch(set_state) {
         case set_port: 
-            speaker_bit = speaker_val << 4
+            speaker_bit = speaker_val << 4;
             PORTB = three_val | blink_val | speaker_bit;
             break;
         default: 
