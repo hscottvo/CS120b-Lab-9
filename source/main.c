@@ -67,7 +67,7 @@ void three_tick() {
             three_val = 0x01 << (three_bit);
             three_bit = (three_bit + 1) % 3;
             break;
-        case default:
+        default:
             three_val = 0x00;
     }
 }
