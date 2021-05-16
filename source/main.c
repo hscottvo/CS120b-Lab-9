@@ -119,28 +119,30 @@ void speaker_tick() {
 void freq_tick() {
     switch(freq_state) {
         case freq_wait:
-            if ((tempA & 0x10) == 0x10) {
+            if ((tempA & 0x02) == 0x02) {
                 if(speaker_freq < 3) {
                     speaker_freq += 1;
                 }
                 freq_state = freq_dec;
             } 
-            else if ((tempA & 0x08) == 0x08) {
+            else if ((tempA & 0x01) == 0x01) {
                 if(speaker_freq > 0) {
                     speaker_freq -= 1;
                 }
                 freq_state = freq_inc;
+            } else {
+                freq_state = freq_wait;
             }
             break;
         case freq_dec:
-            if ((tempA & 0x10) == 0x10) {
+            if ((tempA & 0x02) == 0x02) {
                 freq_state = freq_dec;
             } else {
                 freq_state = freq_wait;
             }
             break;
         case freq_inc:
-            if ((tempA & 0x08) == 0x08) {
+            if ((tempA & 0x01) == 0x01) {
                 freq_state = freq_inc;
             } else {
                 freq_state = freq_wait;
