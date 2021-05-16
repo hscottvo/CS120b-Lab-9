@@ -96,33 +96,17 @@ int main(void) {
     /* Insert DDR and PORT initializations */
     // DDRA = 0x00; PORTA = 0xFF;
     DDRB = 0xFF; PORTB = 0x00;
-
-    unsigned short shift_time = 300;
-    unsigned short blink_time = 1000;
-    unsigned short shift_time_val = 0;
-    unsigned short blink_time_val = 0;
-
-    TimerSet(1);
+    TimerSet(1000);
     TimerOn();
     three_state = three_shift;
     blink_state = blink_not;
     set_state = set_port;
     /* Insert your solution below */
     while (1) {
-        if (shift_time_val >= shift_time) {
-            three_tick();
-            shift_time_val = 0;
-        } else {
-            shift_time_val += 1;
-        }
-        if (blink_time_val >= blink_time) {
-            blink_tick();
-            blink_time_val = 0;
-        } else {
-            blink_time_val += 1;
-        }
-        set_tick();
         while(!TimerFlag);
+        three_tick();
+        blink_tick();
+        set_tick();
         TimerFlag = 0;
     }
     return 1;
