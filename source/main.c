@@ -58,6 +58,7 @@ unsigned char three_val = 0x00;
 unsigned char speaker_val = 0x00;
 unsigned char speaker_bit = 0x00;
 unsigned char blink_val = 0x08;
+unsigned char tempA = 0x00;
 
 enum three_states {three_shift} three_state;
 enum blink_states {blink_not} blink_state;
@@ -89,14 +90,14 @@ void speaker_tick() {
     switch(speaker_state) {
         case sound_off:
             speaker_val = 0x00;
-            if((PINA & 0x04) == 0x04){
+            if((tempA & 0x04) == 0x04){
                 speaker_state = sound_on;
             } else {
                 speaker_state = sound_off;
             }
             break;
         case sound_on:
-            if((PINA & 0x04) == 0x04) {
+            if((tempA & 0x04) == 0x04) {
                 if (speaker_val == 0x00) {
                     speaker_val = 0x01;
                 } else {
@@ -142,6 +143,7 @@ int main(void) {
     set_state = set_port;
     /* Insert your solution below */
     while (1) {
+        tempA = ~PINA;
         if (shift_time_val >= shift_time) {
             three_tick();
             shift_time_val = 0;
