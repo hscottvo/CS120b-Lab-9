@@ -202,6 +202,7 @@ int main(void) {
         } else {
             speaker_time_val += 1;
         }
+        freq_tick();
         set_tick();
         while(!TimerFlag);
         TimerFlag = 0;
