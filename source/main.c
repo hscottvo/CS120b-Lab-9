@@ -1,3 +1,4 @@
+
 /*	Author: lab
  *  Partner(s) Name: Scott Vo
  *	Lab Section:
@@ -59,11 +60,14 @@ unsigned char speaker_val = 0x00;
 unsigned char speaker_bit = 0x00;
 unsigned char blink_val = 0x08;
 unsigned char tempA = 0x00;
+unsigned short speaker_times[4] = {1, 2, 4, 8};
+unsigned char speaker_freq = 0x00;
 
 enum three_states {three_shift} three_state;
 enum blink_states {blink_not} blink_state;
 enum speaker_states {sound_off, sound_on} speaker_state;
 enum set_states {set_port} set_state;
+enum freq_states {freq_wait, freq_inc, freq_dec} freq_state;
 
 void three_tick() {
     switch(three_state) {
@@ -112,6 +116,41 @@ void speaker_tick() {
     }
 }
 
+void freq_tick() {
+    switch(freq_state) {
+        case freq_wait:
+            if ((tempA & 0x10) == 0x10) {
+                if(speaker_freq < 3) {
+                    speaker_freq += 1);
+                }
+                freq_state = freq_dec;
+            } 
+            else if ((tempA & 0x08) == 0x08) {
+                if(speaker_freq > 0) {
+                    speaker_freq -= 1;
+                }
+                freq_state = freq_inc;
+            }
+            break;
+        case freq_dec:
+            if ((tempA & 0x10) == 0x10) {
+                freq_state = freq_dec;
+            } else {
+                freq_state = freq_wait;
+            }
+            break;
+        case freq_inc:
+            if ((tempA & 0x08) == 0x08) {
+                freq_state = freq_inc;
+            } else {
+                freq_state = freq_wait;
+            }
+            break;
+        default:
+            speaker_freq = 0x00;
+    }
+}
+
 void set_tick() {
     switch(set_state) {
         case set_port: 
@@ -130,7 +169,7 @@ int main(void) {
 
     unsigned short shift_time = 300;
     unsigned short blink_time = 1000;
-    unsigned short speaker_time = 2;
+    unsigned short speaker_time = speaker_times[speaker_freq];
     unsigned short shift_time_val = 0;
     unsigned short speaker_time_val = 0;
     unsigned short blink_time_val = 0;
@@ -144,6 +183,7 @@ int main(void) {
     /* Insert your solution below */
     while (1) {
         tempA = ~PINA;
+        speaker_time = speaker_times[speaker_freq]
         if (shift_time_val >= shift_time) {
             three_tick();
             shift_time_val = 0;
