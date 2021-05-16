@@ -130,6 +130,7 @@ int main(void) {
     TimerOn();
     three_state = three_shift;
     blink_state = blink_not;
+    speaker_state = sound_off;
     set_state = set_port;
     /* Insert your solution below */
     while (1) {
