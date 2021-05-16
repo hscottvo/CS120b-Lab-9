@@ -56,6 +56,7 @@ void TimerSet(unsigned long M) {
 unsigned char three_bit = 0x00;
 unsigned char three_val = 0x00;
 unsigned char speaker_val = 0x00;
+unsigned char speaker_bit = 0x00;
 unsigned char blink_val = 0x08;
 
 enum three_states {three_shift} three_state;
@@ -113,7 +114,8 @@ void speaker_tick() {
 void set_tick() {
     switch(set_state) {
         case set_port: 
-            PORTB = three_val | blink_val | (speaker_val << 4);
+            speaker_bit = speaker_val << 4
+            PORTB = three_val | blink_val | speaker_bit;
             break;
         default: 
             PORTB = 0x00;
