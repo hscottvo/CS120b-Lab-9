@@ -101,6 +101,9 @@ void speaker_tick() {
             } else {
                 speaker_state = sound_off;
             }
+            break;
+        default: 
+            speaker_val = 0;
     }
 }
 
