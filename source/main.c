@@ -85,7 +85,7 @@ void blink_tick() {
 }
 
 void speaker_tick() {
-    switch(speaker_states) {
+    switch(speaker_state) {
         case sound_off:
             speaker_val = 0x00;
             if((PINA & 0x04) == 0x04){
