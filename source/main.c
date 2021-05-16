@@ -121,7 +121,7 @@ void freq_tick() {
         case freq_wait:
             if ((tempA & 0x10) == 0x10) {
                 if(speaker_freq < 3) {
-                    speaker_freq += 1);
+                    speaker_freq += 1;
                 }
                 freq_state = freq_dec;
             } 
