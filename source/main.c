@@ -96,8 +96,11 @@ void speaker_tick() {
             break;
         case sound_on:
             if((PINA & 0x04) == 0x04) {
-                speaker_val = (speaker_val + 1) % 2;
-                speaker_state = sound_on;
+                if (speaker_val == 0x00) {
+                    speaker_val = 0x01;
+                } else {
+                    speaker_val = 0x00;
+                }
             } else {
                 speaker_state = sound_off;
             }
