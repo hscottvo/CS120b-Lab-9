@@ -55,10 +55,12 @@ void TimerSet(unsigned long M) {
 
 unsigned char three_bit = 0x00;
 unsigned char three_val = 0x00;
+unsigned char speaker_val = 0x00;
 unsigned char blink_val = 0x08;
 
 enum three_states {three_shift} three_state;
 enum blink_states {blink_not} blink_state;
+enum speaker_states {sound_off, sound_on} speaker_state;
 enum set_states {set_port} set_state;
 
 void three_tick() {
@@ -82,10 +84,30 @@ void blink_tick() {
     }
 }
 
+void speaker_tick() {
+    switch(speaker_states) {
+        case sound_off:
+            speaker_val = 0x00;
+            if((PINA & 0x04) == 0x04){
+                speaker_state = sound_on;
+            } else {
+                speaker_state = sound_off;
+            }
+            break;
+        case sound_on:
+            if((PINA & 0x04) == 0x04) {
+                speaker_val = (speaker_val + 1) % 2;
+                speaker_state = sound_on;
+            } else {
+                speaker_state = sound_off;
+            }
+    }
+}
+
 void set_tick() {
     switch(set_state) {
         case set_port: 
-            PORTB = three_val | blink_val;
+            PORTB = three_val | blink_val | (speaker_val << 4);
             break;
         default: 
             PORTB = 0x00;
@@ -94,12 +116,14 @@ void set_tick() {
 
 int main(void) {
     /* Insert DDR and PORT initializations */
-    // DDRA = 0x00; PORTA = 0xFF;
+    DDRA = 0x00; PORTA = 0xFF;
     DDRB = 0xFF; PORTB = 0x00;
 
     unsigned short shift_time = 300;
     unsigned short blink_time = 1000;
+    unsigned short speaker_time = 2;
     unsigned short shift_time_val = 0;
+    unsigned short speaker_time_val = 0;
     unsigned short blink_time_val = 0;
 
     TimerSet(1);
@@ -120,6 +144,12 @@ int main(void) {
             blink_time_val = 0;
         } else {
             blink_time_val += 1;
+        }
+        if (speaker_time_val >= speaker_time) {
+            speaker_tick();
+            speaker_time_val = 0;
+        } else {
+            speaker_time_val += 1;
         }
         set_tick();
         while(!TimerFlag);
