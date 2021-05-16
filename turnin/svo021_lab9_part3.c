@@ -182,6 +182,7 @@ int main(void) {
     /* Insert your solution below */
     while (1) {
         tempA = ~PINA;
+        speaker_time = speaker_times[speaker_freq]
         if (shift_time_val >= shift_time) {
             three_tick();
             shift_time_val = 0;
